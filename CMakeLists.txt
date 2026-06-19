@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 4.2)
-project(cpp_tests)
+project(raytracer-cpp)
 
 include(FetchContent)
 
@@ -22,6 +22,15 @@ if (NOT ${LIB1}_FOUND)
     include_dependency(${LIB1} https://github.com/raysan5/raylib.git 6.0)
 endif()
 
-add_executable(${PROJECT_NAME} src/main.cpp)
+add_executable(${PROJECT_NAME} src/main.cpp
+        src/Canvas.cpp
+        include/Canvas.h
+        include/Vec.h
+        src/Vec.cpp
+        src/Matrix.cpp
+        include/Matrix.h
+        include/Constants.h)
+
+target_include_directories(${PROJECT_NAME} PRIVATE include)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE ${LIB1})
