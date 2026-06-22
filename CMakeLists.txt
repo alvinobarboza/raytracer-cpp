@@ -27,9 +27,13 @@ add_executable(${PROJECT_NAME} src/main.cpp
         include/Canvas.h
         include/Vec.h
         src/Vec.cpp
-        src/Matrix.cpp
         include/Matrix.h
-        include/Constants.h)
+        include/Constants.h
+        include/Lights.h
+        src/Camera.cpp
+        include/Camera.h
+        include/Sphere.h
+)
 
 target_include_directories(${PROJECT_NAME} PRIVATE include)
 
