@@ -20,6 +20,7 @@ public:
     Vec3 operator*(const Vec3 &scalar) const;
     Vec3 operator*(const Matrix3x3 &matrix) const;
     Vec3 operator+(const Vec3 &vector) const;
+    void operator+=(const Vec3 &vector);
 
     [[nodiscard]] Vec3 rotate_x(float angle) const;
     [[nodiscard]] Vec3 rotate_y(float angle) const;

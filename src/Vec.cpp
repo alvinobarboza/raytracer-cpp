@@ -56,6 +56,12 @@ Vec3 Vec3::operator+(const Vec3 &vector) const {
     };
 }
 
+void Vec3::operator+=(const Vec3 &vector) {
+    this->x += vector.x;
+    this->y += vector.y;
+    this->z += vector.z;
+}
+
 Vec3 Vec3::operator*(const Matrix3x3 &matrix) const {
     return {
         this->x * matrix.data[0] + this->y * matrix.data[1] + this->z * matrix.data[2],
