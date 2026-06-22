@@ -24,6 +24,14 @@ Vec3 Vec3::normal() const {
     };
 }
 
+Vec3 Vec3::cross(const Vec3 &other) const {
+    return {
+        this->y*other.z - this->z*other.y,
+        this->z*other.x - this->x*other.z,
+        this->x*other.y - this->y*other.x,
+    };
+}
+
 Vec3 Vec3::operator*(const float scalar) const {
     return {
         this->x * scalar,

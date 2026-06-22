@@ -13,7 +13,7 @@ class Matrix3x3 {
         0,1,0,
         0,0,1,
     };
-    Matrix3x3(){};
+    Matrix3x3()= default;
     Matrix3x3(
         const float m00, const float m01, const float m02,
         const float m10, const float m11, const float m12,

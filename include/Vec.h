@@ -14,6 +14,7 @@ public:
     [[nodiscard]] float length_squared() const;
     [[nodiscard]] float length() const;
     [[nodiscard]] Vec3 normal() const;
+    [[nodiscard]] Vec3 cross(const Vec3 &other) const;
 
     Vec3 operator*(float scalar) const;
     Vec3 operator*(const Vec3 &scalar) const;

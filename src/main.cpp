@@ -4,16 +4,23 @@
 #include "Vec.h"
 
 int main() {
+    const Matrix3x3 mat3 = {
+        2, 3, 4,
+        5, 6, 7,
+        8, 9, 10
+    };
 
     const Vec3 n1 {10, 10, 10};
     const Vec3 n2 {20, 20, 20};
 
+    const Vec3 v1 {2, 3, 4};
+    const Vec3 v2 {3, 5, 6};
+
+    std::cout << v1.cross(v2) << std::endl;
+    std::cout << v1 * mat3 << std::endl;
+
     const Vec3 n3 = n1 * n2;
-    const Matrix3x3 mat3 = {
-        2, 3, 4,
-        5, 6, 7,
-        9, 8, 10
-    };
+
 
     const float dotV = n3.length_squared();
 
