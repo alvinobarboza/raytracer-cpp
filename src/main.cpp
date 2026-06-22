@@ -20,7 +20,7 @@ int main() {
     std::cout << n3 * mat3 << n3 << dotV << std::endl;
 
     const Vec3 n4 {10, 0, 0};
-    const Vec3 rotated = n4.rotate_xyz({0,90,0});
+    const Vec3 rotated = n4.rotate_y(90);
     std::cout << rotated << std::endl;
 
     std::cout << rotated + n3 << std::endl;

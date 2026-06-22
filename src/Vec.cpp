@@ -56,6 +56,18 @@ Vec3 Vec3::operator*(const Matrix3x3 &matrix) const {
     };
 }
 
+Vec3 Vec3::rotate_x(const float angle) const {
+    return this->rotate_xyz({angle, 0,0});
+}
+
+Vec3 Vec3::rotate_y(const float angle) const {
+    return this->rotate_xyz({0, angle,0});
+}
+
+Vec3 Vec3::rotate_z(const float angle) const {
+    return this->rotate_xyz({0, 0,angle});
+}
+
 Vec3 Vec3::rotate_xyz(const Vec3 &angle) const {
     const float cosa = std::cos(angle.x * -Math::DEG_TO_RAD);
     const float sina = std::sin(angle.x * -Math::DEG_TO_RAD);

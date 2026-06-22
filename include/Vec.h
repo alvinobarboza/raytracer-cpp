@@ -20,7 +20,10 @@ public:
     Vec3 operator*(const Matrix3x3 &matrix) const;
     Vec3 operator+(const Vec3 &vector) const;
 
-    Vec3 rotate_xyz(const Vec3 &angle) const;
+    [[nodiscard]] Vec3 rotate_x(float angle) const;
+    [[nodiscard]] Vec3 rotate_y(float angle) const;
+    [[nodiscard]] Vec3 rotate_z(float angle) const;
+    [[nodiscard]] Vec3 rotate_xyz(const Vec3 &angle) const;
 
     friend std::ostream& operator<<(std::ostream &os, const Vec3 &vector);
 };
