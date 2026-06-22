@@ -4,10 +4,17 @@
 
 class RayCamera {
     public:
-    Vec3 position, direction, rotation;
+    static inline float DefaultMoveSpeed = 4.0f;
+    static inline float DefaultTurnSpeed = 70.0f;
 
-    RayCamera(const Vec3 position, const Vec3 direction, const Vec3 rotation):
-    position {position}, direction {direction}, rotation {rotation} {};
+    Vec3 position, direction, rotation;
+    float moveSpeed, turnSpeed;
+
+    RayCamera(
+        const Vec3 position, const Vec3 direction, const Vec3 rotation,
+        const float moveSpeed, const float turnSpeed):
+    position {position}, direction {direction}, rotation {rotation}, moveSpeed {moveSpeed},
+    turnSpeed {turnSpeed} {}
 
     void move_forward(float speed);
     void move_backward(float speed);

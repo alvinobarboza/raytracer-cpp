@@ -35,7 +35,7 @@ public:
     static Vec3 BACKWARD();
     static Vec3 LEFT();
     static Vec3 RIGHT();
-
+    static Vec3 ZERO();
 };
 
 #endif //RAYTRACER_CPP_VEC_H

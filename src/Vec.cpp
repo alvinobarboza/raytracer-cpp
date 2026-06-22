@@ -124,3 +124,6 @@ Vec3 Vec3::LEFT() {
 Vec3 Vec3::RIGHT() {
     return {1,0,0};
 };
+Vec3 Vec3::ZERO() {
+    return {0,0,0};
+};
