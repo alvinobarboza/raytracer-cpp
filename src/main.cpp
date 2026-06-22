@@ -18,6 +18,7 @@ int main() {
 
     std::cout << v1.cross(v2) << std::endl;
     std::cout << v1 * mat3 << std::endl;
+    std::cout << Vec3::UP() << std::endl;
 
     const Vec3 n3 = n1 * n2;
 

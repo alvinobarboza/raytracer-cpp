@@ -27,6 +27,14 @@ public:
     [[nodiscard]] Vec3 rotate_xyz(const Vec3 &angle) const;
 
     friend std::ostream& operator<<(std::ostream &os, const Vec3 &vector);
+
+    static Vec3 UP();
+    static Vec3 DOWN();
+    static Vec3 FORWARD();
+    static Vec3 BACKWARD();
+    static Vec3 LEFT();
+    static Vec3 RIGHT();
+
 };
 
 #endif //RAYTRACER_CPP_VEC_H

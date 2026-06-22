@@ -99,3 +99,22 @@ std::ostream& operator<<(std::ostream &os, const Vec3 &vector) {
     os << "(x:" << vector.x << ", y:" << vector.y << ", z:" << vector.z << ")";
     return os;
 }
+
+Vec3 Vec3::UP() {
+    return {0,1,0};
+};
+Vec3 Vec3::DOWN() {
+    return {0,-1,0};
+};
+Vec3 Vec3::FORWARD() {
+    return {0,0,1};
+};
+Vec3 Vec3::BACKWARD() {
+    return {0,0,-1};
+};
+Vec3 Vec3::LEFT() {
+    return {-1,0,0};
+};
+Vec3 Vec3::RIGHT() {
+    return {1,0,0};
+};
