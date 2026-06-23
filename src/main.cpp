@@ -64,12 +64,17 @@ int main() {
     const int posX = static_cast<int>(screenWidth / 2.0f - static_cast<float>(canvasTexture.width )/ 2.0f);
     const int posY = static_cast<int>(screenHeight / 2.0f - static_cast<float>(canvasTexture.height) / 2.0f);
 
+    constexpr int startX = -screenWidth / 2;
+    constexpr int startY = -screenHeight / 2;
+    constexpr int endX = screenWidth / 2;
+    constexpr int endY = screenHeight / 2;
+
     while (!WindowShouldClose())
     {
         ray_camera.handle_input();
 
-        for (int x = -screenWidth / 2; x < screenWidth / 2; x++) {
-            for (int y = -screenHeight / 2; y < screenHeight / 2; y++) {
+        for (int x = startX; x < endX; x++) {
+            for (int y = startY; y < endY; y++) {
                 auto rayDirection = view_canvas.canvas_to_viewport(x, y);
                 auto rayCorrectedDirection = rayDirection.rotate_xyz(ray_camera.rotation);
 
