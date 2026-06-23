@@ -61,8 +61,9 @@ int main() {
     const auto canvasTexture = LoadTextureFromImage(tempImageTexture);
     UnloadImage(tempImageTexture);
 
-    const int posX = static_cast<int>(screenWidth / 2.0f - static_cast<float>(canvasTexture.width )/ 2.0f);
-    const int posY = static_cast<int>(screenHeight / 2.0f - static_cast<float>(canvasTexture.height) / 2.0f);
+    // TODO = I don't remember why I did this in the go version
+    constexpr int posX = 0;
+    constexpr int posY = 0;
 
     while (!WindowShouldClose())
     {
