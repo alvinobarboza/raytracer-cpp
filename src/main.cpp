@@ -27,7 +27,7 @@ int main() {
     InitWindow(screenWidth, screenHeight, "Camera movement");
     SetTargetFPS(60);
 
-    auto ray_camera = RayCamera(
+    const auto ray_camera = RayCamera(
         Vec3::ZERO(),
         Vec3::FORWARD(),
         Vec3::ZERO(),
@@ -35,12 +35,12 @@ int main() {
         RayCamera::DefaultTurnSpeed
     );
 
-    auto view_canvas = Canvas(
+    const auto view_canvas = Canvas(
         screenWidth, screenHeight,
         View{1, static_cast<float>(screenHeight) / static_cast<float>(screenWidth), 1}
     );
 
-    auto ray_tracer = RayTracer(max_bounces, max_distance);
+    auto ray_tracer = RayTracer(ray_camera, view_canvas, max_bounces, max_distance);
     ray_tracer.add_sphere(Sphere(
         Vec3(0,-1,3),RED,1,500,0.2,0,0
         ));
@@ -64,29 +64,12 @@ int main() {
     const int posX = static_cast<int>(screenWidth / 2.0f - static_cast<float>(canvasTexture.width )/ 2.0f);
     const int posY = static_cast<int>(screenHeight / 2.0f - static_cast<float>(canvasTexture.height) / 2.0f);
 
-    constexpr int startX = -screenWidth / 2;
-    constexpr int startY = -screenHeight / 2;
-    constexpr int endX = screenWidth / 2;
-    constexpr int endY = screenHeight / 2;
-
     while (!WindowShouldClose())
     {
-        ray_camera.handle_input();
+        ray_tracer.camera.handle_input();
+        ray_tracer.compute_rays();
 
-        for (int x = startX; x < endX; x++) {
-            for (int y = startY; y < endY; y++) {
-                auto rayDirection = view_canvas.canvas_to_viewport(x, y);
-                auto rayCorrectedDirection = rayDirection.rotate_xyz(ray_camera.rotation);
-
-                const auto color = ray_tracer.trace_ray(
-                    ray_camera.position,
-                    rayCorrectedDirection, view_canvas.view.d);
-
-                view_canvas.put_pixel(x,y,color);
-            }
-        }
-
-        UpdateTexture(canvasTexture, view_canvas.pixels.data());
+        UpdateTexture(canvasTexture, ray_tracer.canvas.pixels.data());
 
         BeginDrawing();
             ClearBackground(RAYWHITE);
@@ -96,7 +79,7 @@ int main() {
 
             DrawText(
                 TextFormat("Cam-> \nX:%01f \nY:%01f \nZ:%01f",
-                    ray_camera.position.x, ray_camera.position.y, ray_camera.position.z),
+                    ray_tracer.camera.position.x, ray_tracer.camera.position.y, ray_tracer.camera.position.z),
                 10, 30, 20, WHITE);
             DrawText("Move: A/W/S/D\nControl Camera: UP/DOWN/LEFT/RIGHT",10, 120, 20, WHITE);
             DrawText("I'm a bit too lazy to make \nit work with the mouse...",10, 160, 10, WHITE);

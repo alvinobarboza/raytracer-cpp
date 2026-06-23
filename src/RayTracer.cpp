@@ -39,3 +39,23 @@ Color RayTracer::trace_ray(const Vec3 &origin, const Vec3 &ray, const float min_
 
     return closes_sphere.color;
 }
+
+void RayTracer::compute_rays() {
+    const int startX = -this->canvas.width / 2;
+    const int startY = -this->canvas.height / 2;
+    const int endX = this->canvas.width / 2;
+    const int endY = this->canvas.height / 2;
+
+    for (int x = startX; x < endX; x++) {
+        for (int y = startY; y < endY; y++) {
+            auto rayDirection = this->canvas.canvas_to_viewport(x, y);
+            auto rayCorrectedDirection = rayDirection.rotate_xyz(this->camera.rotation);
+
+            const auto color = this->trace_ray(
+                this->camera.position,
+                rayCorrectedDirection, this->canvas.view.d);
+
+            this->canvas.put_pixel(x,y,color);
+        }
+    }
+}
