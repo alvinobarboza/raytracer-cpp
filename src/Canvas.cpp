@@ -15,8 +15,8 @@ void Canvas::put_pixel(const int x, const int y, const Color color) {
 
 Vec3 Canvas::canvas_to_viewport(const int x, const int y) const {
     return {
-        x * this->view.x / this->width,
-        y * this->view.y / this->height,
+        (static_cast<float>(x) * this->view.x) / static_cast<float>(this->width),
+        (static_cast<float>(y) * this->view.y) / static_cast<float>(this->height),
         this->view.d
     };
 }
