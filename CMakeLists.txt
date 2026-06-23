@@ -33,6 +33,9 @@ add_executable(${PROJECT_NAME} src/main.cpp
         src/Camera.cpp
         include/Camera.h
         include/Sphere.h
+        src/RayTracer.cpp
+        include/RayTracer.h
+        src/Sphere.cpp
 )
 
 target_include_directories(${PROJECT_NAME} PRIVATE include)
