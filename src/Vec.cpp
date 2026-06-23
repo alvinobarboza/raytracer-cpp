@@ -56,6 +56,14 @@ Vec3 Vec3::operator+(const Vec3 &vector) const {
     };
 }
 
+Vec3 Vec3::operator-(const Vec3 &vector) const {
+    return {
+        this->x - vector.x,
+        this->y - vector.y,
+        this->z - vector.z
+    };
+}
+
 void Vec3::operator+=(const Vec3 &vector) {
     this->x += vector.x;
     this->y += vector.y;
