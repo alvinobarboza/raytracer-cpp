@@ -3,19 +3,23 @@
 
 #include "Constants.h"
 
-float Vec3::dot(const Vec3 &other) const {
+float Vec3::dot(const Vec3 &other) const
+{
     return this->x * other.x + this->y * other.y + this->z * other.z;
 }
 
-float Vec3::length_squared() const {
+float Vec3::length_squared() const
+{
     return this->x * this->x + this->y * this->y + this->z * this->z;
 }
 
-float Vec3::length() const {
+float Vec3::length() const
+{
     return std::sqrt(this->length_squared());
 }
 
-Vec3 Vec3::normal() const {
+Vec3 Vec3::normal() const
+{
     const float normal = this->length();
     return {
         this->x / normal,
@@ -24,7 +28,8 @@ Vec3 Vec3::normal() const {
     };
 }
 
-Vec3 Vec3::cross(const Vec3 &other) const {
+Vec3 Vec3::cross(const Vec3 &other) const
+{
     return {
         this->y*other.z - this->z*other.y,
         this->z*other.x - this->x*other.z,
@@ -32,7 +37,8 @@ Vec3 Vec3::cross(const Vec3 &other) const {
     };
 }
 
-Vec3 Vec3::operator*(const float scalar) const {
+Vec3 Vec3::operator*(const float scalar) const
+{
     return {
         this->x * scalar,
         this->y * scalar,
@@ -40,7 +46,8 @@ Vec3 Vec3::operator*(const float scalar) const {
     };
 }
 
-Vec3 Vec3::operator*(const Vec3 &scalar) const {
+Vec3 Vec3::operator*(const Vec3 &scalar) const
+{
     return {
         this->x * scalar.x,
         this->y * scalar.y,
@@ -48,7 +55,8 @@ Vec3 Vec3::operator*(const Vec3 &scalar) const {
     };
 }
 
-Vec3 Vec3::operator+(const Vec3 &vector) const {
+Vec3 Vec3::operator+(const Vec3 &vector) const
+{
     return {
         this->x + vector.x,
         this->y + vector.y,
@@ -56,7 +64,8 @@ Vec3 Vec3::operator+(const Vec3 &vector) const {
     };
 }
 
-Vec3 Vec3::operator-(const Vec3 &vector) const {
+Vec3 Vec3::operator-(const Vec3 &vector) const
+{
     return {
         this->x - vector.x,
         this->y - vector.y,
@@ -64,13 +73,15 @@ Vec3 Vec3::operator-(const Vec3 &vector) const {
     };
 }
 
-void Vec3::operator+=(const Vec3 &vector) {
+void Vec3::operator+=(const Vec3 &vector)
+{
     this->x += vector.x;
     this->y += vector.y;
     this->z += vector.z;
 }
 
-Vec3 Vec3::operator*(const Matrix3x3 &matrix) const {
+Vec3 Vec3::operator*(const Matrix3x3 &matrix) const
+{
     return {
         this->x * matrix.data[0] + this->y * matrix.data[1] + this->z * matrix.data[2],
         this->x * matrix.data[3] + this->y * matrix.data[4] + this->z * matrix.data[5],
@@ -78,19 +89,23 @@ Vec3 Vec3::operator*(const Matrix3x3 &matrix) const {
     };
 }
 
-Vec3 Vec3::rotate_x(const float angle) const {
+Vec3 Vec3::rotate_x(const float angle) const
+{
     return this->rotate_xyz({angle, 0,0});
 }
 
-Vec3 Vec3::rotate_y(const float angle) const {
+Vec3 Vec3::rotate_y(const float angle) const
+{
     return this->rotate_xyz({0, angle,0});
 }
 
-Vec3 Vec3::rotate_z(const float angle) const {
+Vec3 Vec3::rotate_z(const float angle) const
+{
     return this->rotate_xyz({0, 0,angle});
 }
 
-Vec3 Vec3::rotate_xyz(const Vec3 &angle) const {
+Vec3 Vec3::rotate_xyz(const Vec3 &angle) const
+{
     const float cosa = std::cos(angle.x * -Math::DEG_TO_RAD);
     const float sina = std::sin(angle.x * -Math::DEG_TO_RAD);
 
@@ -109,29 +124,43 @@ Vec3 Vec3::rotate_xyz(const Vec3 &angle) const {
     return *this * matrix;
 }
 
-std::ostream& operator<<(std::ostream &os, const Vec3 &vector) {
+std::ostream& operator<<(std::ostream &os, const Vec3 &vector)
+{
     os << "(x:" << vector.x << ", y:" << vector.y << ", z:" << vector.z << ")";
     return os;
 }
 
-Vec3 Vec3::UP() {
+Vec3 Vec3::UP()
+{
     return {0,1,0};
 };
-Vec3 Vec3::DOWN() {
+
+Vec3 Vec3::DOWN()
+{
     return {0,-1,0};
 };
-Vec3 Vec3::FORWARD() {
+
+Vec3 Vec3::FORWARD()
+{
     return {0,0,1};
 };
-Vec3 Vec3::BACKWARD() {
+
+Vec3 Vec3::BACKWARD()
+{
     return {0,0,-1};
 };
-Vec3 Vec3::LEFT() {
+
+Vec3 Vec3::LEFT()
+{
     return {-1,0,0};
 };
-Vec3 Vec3::RIGHT() {
+
+Vec3 Vec3::RIGHT()
+{
     return {1,0,0};
 };
-Vec3 Vec3::ZERO() {
+
+Vec3 Vec3::ZERO()
+{
     return {0,0,0};
 };

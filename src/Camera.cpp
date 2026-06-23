@@ -1,17 +1,20 @@
 #include "Camera.h"
 #include "raylib.h"
 
-void RayCamera::move_forward(const float speed) {
+void RayCamera::move_forward(const float speed)
+{
     const Vec3 dir = this->direction.rotate_xyz(this->rotation);
     const Vec3 normal = dir.normal();
     this->position += normal * speed;
 }
 
-void RayCamera::move_backward(const float speed) {
+void RayCamera::move_backward(const float speed)
+{
     this->move_forward(-speed);
 }
 
-void RayCamera::move_left(const float speed) {
+void RayCamera::move_left(const float speed)
+{
     const Vec3 dir = this->direction.rotate_xyz(this->rotation);
     const Vec3 sideDir = dir.cross(Vec3::UP());
 
@@ -19,11 +22,13 @@ void RayCamera::move_left(const float speed) {
     this->position += normalSideDir * speed;
 }
 
-void RayCamera::move_right(const float speed) {
+void RayCamera::move_right(const float speed)
+{
     this->move_left(-speed);
 }
 
-void RayCamera::handle_input() {
+void RayCamera::handle_input()
+{
     if (IsKeyDown(KEY_W)) {
         this->move_forward(this->moveSpeed * GetFrameTime());
     }
