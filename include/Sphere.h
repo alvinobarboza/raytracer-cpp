@@ -6,19 +6,29 @@
 class Sphere {
     public:
     Vec3 center;
-    Color color;
+    Color color{};
     float radius;
     int specularity;
-    float reflectivity;
+    float reflectivity{};
     float refractionIndex;
     float opacity;
 
+    Sphere(): center(Vec3(0.0f, 0.0f, 0.0f)) {
+        color = Color(1.0f, 1.0f, 1.0f);
+        radius = 0.0f;
+        specularity = 0.0f;
+        refractionIndex = 0.0f;
+        opacity = 0.0f;
+    };
+
     Sphere(
-        Vec3 center, Color color,
-        float radius, int specularity,
-        float reflectivity, float refractionIndex, float opacity) :
-center(center), color(color), radius(radius), specularity(specularity),
-reflectivity(reflectivity), refractionIndex(refractionIndex), opacity(opacity) {}
+        const Vec3 center, const Color color,
+        const float radius, const int specularity,
+        const float reflectivity, const float refractionIndex, const float opacity) :
+        center(center), color(color), radius(radius), specularity(specularity),
+        reflectivity(reflectivity), refractionIndex(refractionIndex), opacity(opacity) {}
+
+    [[nodiscard]] std::pair<float,float> intersect(const Vec3 &rayOrigin, const Vec3 &rayDir, float maxDist) const;
 };
 
 #endif //RAYTRACER_CPP_SPHERE_H
