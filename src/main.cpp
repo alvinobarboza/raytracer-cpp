@@ -16,45 +16,6 @@ void draw_raytracer_camera(const RayCamera &camera) {
     DrawSphereWires(position, 1.1f, 12, 12, MAROON);
 }
 
-void input_handler(RayCamera &camera) {
-    if (IsKeyDown(KEY_W)) {
-        camera.move_forward(camera.moveSpeed * GetFrameTime());
-    }
-    if (IsKeyDown(KEY_S)) {
-        camera.move_backward(camera.moveSpeed * GetFrameTime());
-    }
-    if (IsKeyDown(KEY_A)) {
-        camera.move_left(camera.moveSpeed * GetFrameTime());
-    }
-    if (IsKeyDown(KEY_D)) {
-        camera.move_right(camera.moveSpeed * GetFrameTime());
-    }
-    if (IsKeyDown(KEY_SPACE)) {
-        camera.position.y += camera.moveSpeed * GetFrameTime();
-    }
-    if (IsKeyDown(KEY_LEFT_CONTROL)) {
-        camera.position.y -= camera.moveSpeed * GetFrameTime();
-    }
-
-    if (IsKeyDown(KEY_RIGHT)) {
-        camera.rotation.y -= camera.turnSpeed * GetFrameTime();
-    }
-    if (IsKeyDown(KEY_LEFT)) {
-        camera.rotation.y += camera.turnSpeed * GetFrameTime();
-    }
-    if (IsKeyDown(KEY_UP)) {
-        camera.rotation.x += camera.turnSpeed * GetFrameTime();
-        if (camera.rotation.x >= 90) {
-            camera.rotation.x = 89;
-        }
-    }
-    if (IsKeyDown(KEY_DOWN) && camera.rotation.x < 90){
-        camera.rotation.x -= camera.turnSpeed * GetFrameTime();
-        if (camera.rotation.x <= -90 ){
-            camera.rotation.x = -89;
-        }
-    }
-}
 
 int main() {
     RayCamera ray_camera = RayCamera(
@@ -77,13 +38,11 @@ int main() {
     camera.fovy = 45.0f;                                // Camera field-of-view Y
     camera.projection = CAMERA_PERSPECTIVE;             // Camera mode type
 
-    Vector3 cubePosition = { 0.0f, 0.0f, 0.0f };
-
     SetTargetFPS(60);
 
     while (!WindowShouldClose())
     {
-        input_handler(ray_camera);
+        ray_camera.handle_input();
 
         BeginDrawing();
             ClearBackground(RAYWHITE);

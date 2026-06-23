@@ -20,6 +20,7 @@ class RayCamera {
     void move_backward(float speed);
     void move_left(float speed);
     void move_right(float speed);
+    void handle_input();
 };
 
 #endif //RAYTRACER_CPP_CAMERA_H
