@@ -21,6 +21,8 @@ float Vec3::length() const
 Vec3 Vec3::normal() const
 {
     const float normal = this->length();
+    if (normal == 0) return {0,0,0};
+
     return {
         this->x / normal,
         this->y / normal,

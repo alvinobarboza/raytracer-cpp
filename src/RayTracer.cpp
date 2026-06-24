@@ -35,7 +35,15 @@ std::pair<Sphere, float> RayTracer::closest_intersection(
 Color RayTracer::trace_ray(const Vec3 &origin, const Vec3 &ray, const float min_distance) const {
     auto [closes_sphere, closest_inter] = this->closest_intersection(origin, ray, min_distance);
 
-    if (closes_sphere.radius == 0) return GRAY;
+    if (closes_sphere.radius == 0) return DARKBLUE;
+
+    const Vec3 point = origin + ray * closest_inter;
+    Vec3 normal = point - closes_sphere.center;
+
+    normal = normal.normal();
+    const Vec3 objeToCam = ray * -1;
+
+    //TODO compute light
 
     return closes_sphere.color;
 }
