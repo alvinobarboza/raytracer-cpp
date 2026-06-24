@@ -54,6 +54,21 @@ void RayCamera::move_right(const float speed)
     this->move_left(-speed);
 }
 
+void RayCamera::move_view(const float x, const float y)
+{
+    this->rotation.x -= this->turnSpeed * y * GetFrameTime();
+    this->rotation.y -= this->turnSpeed * x * GetFrameTime();
+
+    if (this->rotation.x > 88) {
+        this->rotation.x = 88;
+    }
+    if (this->rotation.x < -88) {
+        this->rotation.x = -88;
+    }
+
+    this->update_camera_transform();
+}
+
 void RayCamera::handle_input()
 {
     if (IsKeyDown(KEY_W)) {
@@ -75,22 +90,20 @@ void RayCamera::handle_input()
         this->position.y -= this->moveSpeed * GetFrameTime();
     }
 
-    if (IsKeyDown(KEY_RIGHT)) {
-        this->rotation.y -= this->turnSpeed * GetFrameTime();
-    }
-    if (IsKeyDown(KEY_LEFT)) {
-        this->rotation.y += this->turnSpeed * GetFrameTime();
-    }
-    if (IsKeyDown(KEY_UP)) {
-        this->rotation.x += this->turnSpeed * GetFrameTime();
-        if (this->rotation.x >= 90) {
-            this->rotation.x = 89;
+    // Update camera view/rotation
+
+    if (IsKeyPressed(KEY_TAB)) {
+        this->viewLocked = !this->viewLocked;
+        if (this->viewLocked) {
+            EnableCursor();
+        }else {
+            DisableCursor();
         }
     }
-    if (IsKeyDown(KEY_DOWN) && this->rotation.x < 90){
-        this->rotation.x -= this->turnSpeed * GetFrameTime();
-        if (this->rotation.x <= -90 ){
-            this->rotation.x = -89;
+
+    if (!this->viewLocked) {
+        if (auto [x, y] = GetMouseDelta(); x != 0 || y != 0 ) {
+            this->move_view(x, y);
         }
     }
 }

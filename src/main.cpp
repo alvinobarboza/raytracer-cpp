@@ -65,6 +65,8 @@ int main() {
     constexpr int posX = 0;
     constexpr int posY = 0;
 
+    DisableCursor();
+
     while (!WindowShouldClose())
     {
         ray_tracer.camera.handle_input();
@@ -82,8 +84,7 @@ int main() {
                 TextFormat("Cam-> \nX:%01f \nY:%01f \nZ:%01f",
                     ray_tracer.camera.position.x, ray_tracer.camera.position.y, ray_tracer.camera.position.z),
                 10, 30, 20, WHITE);
-            DrawText("Move: A/W/S/D\nControl Camera: UP/DOWN/LEFT/RIGHT",10, 120, 20, WHITE);
-            DrawText("I'm a bit too lazy to make \nit work with the mouse...",10, 160, 10, WHITE);
+            DrawText("Move: A/W/S/D\nControl Camera: MOUSE\n(TAB:LOCK/UNLOCK)",10, 120, 20, WHITE);
         EndDrawing();
 
         if (IsKeyDown(KEY_Q)) {
