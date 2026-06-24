@@ -1,5 +1,32 @@
 #include "Camera.h"
+
+#include <cmath>
+
+#include "Constants.h"
 #include "raylib.h"
+
+void RayCamera::update_camera_transform() {
+    const float cosa = std::cos(this->rotation.x * -Math::DEG_TO_RAD);
+    const float sina = std::sin(this->rotation.x * -Math::DEG_TO_RAD);
+
+    const float cosb = std::cos(this->rotation.y * -Math::DEG_TO_RAD);
+    const float sinb = std::sin(this->rotation.y * -Math::DEG_TO_RAD);
+
+    const float cosga = std::cos(this->rotation.z * -Math::DEG_TO_RAD);
+    const float singa = std::sin(this->rotation.z * -Math::DEG_TO_RAD);
+
+    this->rotationMatrix.data[0] = cosb * cosga;
+    this->rotationMatrix.data[1] = sina*sinb*cosga - cosa*singa;
+    this->rotationMatrix.data[2] = cosa*sinb*cosga + sina*singa;
+
+    this->rotationMatrix.data[3] = cosb * singa;
+    this->rotationMatrix.data[4] = sina*sinb*singa + cosa*cosga;
+    this->rotationMatrix.data[5] = cosa*sinb*singa - sina*cosga;
+
+    this->rotationMatrix.data[6] = -sinb;
+    this->rotationMatrix.data[7] = sina * cosb;
+    this->rotationMatrix.data[8] = cosa * cosb;
+}
 
 void RayCamera::move_forward(const float speed)
 {

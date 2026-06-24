@@ -1,7 +1,3 @@
-//
-// Created by alvino.barboza on 19/06/2026.
-//
-
 #ifndef RAYTRACER_CPP_MATRIX_H
 #define RAYTRACER_CPP_MATRIX_H
 #include <array>
