@@ -1,4 +1,5 @@
 #include "RayTracer.h"
+#include "cmath"
 
 void RayTracer::add_light(const Light &light) {
     this->lights.push_back(light);
@@ -32,6 +33,56 @@ std::pair<Sphere, float> RayTracer::closest_intersection(
     return {sphere, closest_intersection};
 }
 
+Vec3 RayTracer::reflect_ray(const Vec3 &ray, const Vec3 &normal) {
+    const float angle = ray.dot(normal);
+    return normal * 2 * angle - ray;
+}
+
+float RayTracer::compute_light(const Vec3 &point, const Vec3 &normal, const Vec3 &objToCam, const float specular) const {
+    float intensity = 0.0f;
+
+    for (auto &light : this->lights) {
+        if (light.type == LightType::AMBIENT_LIGHT) {
+            intensity = light.intensity;
+        } else {
+            Vec3 lightDirection = light.direction;
+            if (light.type == LightType::POINT_LIGHT) {
+                lightDirection = light.position - point;
+            }
+
+            // Shadows
+            if (auto [sphere, _] = this->closest_intersection(point, lightDirection, 0.001f); sphere.radius > 0) {
+                continue;
+            }
+
+            // Diffuse
+            if (const float angle = normal.dot(lightDirection); angle > 0) {
+                const float normalLength = normal.length();
+                const float lightDirectionLength = lightDirection.length();
+
+                intensity += light.intensity * angle / (normalLength * lightDirectionLength);
+            }
+
+            // Specular
+            if (specular != -1) {
+                Vec3 reflected = this->reflect_ray(lightDirection, normal);
+                if (const float angle = reflected.dot(objToCam); angle > 0) {
+                    const float reflectedLength = reflected.length();
+                    const float objToCamLength = objToCam.length();
+
+                    intensity += std::pow(angle/(reflectedLength*objToCamLength), specular);
+                }
+            }
+        }
+    }
+
+    if (intensity > 1.0f) {
+        intensity = 1.0f;
+    }
+
+    return intensity;
+}
+
 Color RayTracer::trace_ray(const Vec3 &origin, const Vec3 &ray, const float min_distance) const {
     auto [closes_sphere, closest_inter] = this->closest_intersection(origin, ray, min_distance);
 
@@ -41,11 +92,17 @@ Color RayTracer::trace_ray(const Vec3 &origin, const Vec3 &ray, const float min_
     Vec3 normal = point - closes_sphere.center;
 
     normal = normal.normal();
-    const Vec3 objeToCam = ray * -1;
+    const Vec3 objToCam = ray * -1;
 
-    //TODO compute light
+    Color finalColor = closes_sphere.color;
 
-    return closes_sphere.color;
+    const float i = this->compute_light(point, normal, objToCam, closes_sphere.specularity);
+
+    finalColor.r = finalColor.r * i;
+    finalColor.g = finalColor.g * i;
+    finalColor.b = finalColor.b * i;
+
+    return finalColor;
 }
 
 void RayTracer::compute_rays() {

@@ -57,6 +57,10 @@ int main() {
         Vec3(0,-501,0),DARKGREEN,500,200,0.1,0,0
     ));
 
+    ray_tracer.add_light(Light(LightType::AMBIENT_LIGHT,0.2,Vec3::ZERO(),Vec3::ZERO()));
+    ray_tracer.add_light(Light(LightType::POINT_LIGHT,0.6,Vec3(2,1,0),Vec3::ZERO()));
+    ray_tracer.add_light(Light(LightType::DIRECTIONAL_LIGHT,0.2,Vec3::ZERO(),Vec3(1,4,4)));
+
     const auto tempImageTexture = GenImageColor(screenWidth, screenHeight, WHITE);
     const auto canvasTexture = LoadTextureFromImage(tempImageTexture);
     UnloadImage(tempImageTexture);
