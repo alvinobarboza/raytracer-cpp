@@ -38,7 +38,7 @@ Vec3 RayTracer::reflect_ray(const Vec3 &ray, const Vec3 &normal) {
     return normal * 2 * angle - ray;
 }
 
-float RayTracer::compute_light(const Vec3 &point, const Vec3 &normal, const Vec3 &objToCam, const float specular) const {
+float RayTracer::compute_light(const Vec3 &point, const Vec3 &normal, const Vec3 &objToCam, const int specular) const {
     float intensity = 0.0f;
 
     for (auto &light : this->lights) {
@@ -65,12 +65,12 @@ float RayTracer::compute_light(const Vec3 &point, const Vec3 &normal, const Vec3
 
             // Specular
             if (specular != -1) {
-                Vec3 reflected = this->reflect_ray(lightDirection, normal);
+                Vec3 reflected = reflect_ray(lightDirection, normal);
                 if (const float angle = reflected.dot(objToCam); angle > 0) {
                     const float reflectedLength = reflected.length();
                     const float objToCamLength = objToCam.length();
 
-                    intensity += std::pow(angle/(reflectedLength*objToCamLength), specular);
+                    intensity += std::pow(angle/(reflectedLength*objToCamLength), static_cast<float>(specular));
                 }
             }
         }
@@ -98,9 +98,9 @@ Color RayTracer::trace_ray(const Vec3 &origin, const Vec3 &ray, const float min_
 
     const float i = this->compute_light(point, normal, objToCam, closes_sphere.specularity);
 
-    finalColor.r = finalColor.r * i;
-    finalColor.g = finalColor.g * i;
-    finalColor.b = finalColor.b * i;
+    finalColor.r = static_cast<unsigned char>(static_cast<float>(finalColor.r) * i);
+    finalColor.g = static_cast<unsigned char>(static_cast<float>(finalColor.g) * i);
+    finalColor.b = static_cast<unsigned char>(static_cast<float>(finalColor.b) * i);
 
     return finalColor;
 }

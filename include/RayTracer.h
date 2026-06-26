@@ -1,7 +1,3 @@
-//
-// Created by alvino.barboza on 23/06/2026.
-//
-
 #ifndef RAYTRACER_CPP_RAYTRACER_H
 #define RAYTRACER_CPP_RAYTRACER_H
 #include <utility>
@@ -28,12 +24,9 @@ public:
     void add_sphere(const Sphere &sphere);
     void compute_rays();
 private:
-    [[nodiscard]] Color trace_ray(
-        const Vec3 &origin, const Vec3 &ray,
-        float min_distance
-    ) const;
+    [[nodiscard]] Color trace_ray(const Vec3 &origin, const Vec3 &ray, float min_distance) const;
     [[nodiscard]] std::pair<Sphere, float> closest_intersection(const Vec3 &origin, const Vec3 &ray, float min_distance) const;
-    [[nodiscard]] float compute_light(const Vec3 &point, const Vec3 &normal, const Vec3 &objToCam, float specular ) const;
+    [[nodiscard]] float compute_light(const Vec3 &point, const Vec3 &normal, const Vec3 &objToCam, int specular ) const;
     [[nodiscard]] static Vec3 reflect_ray(const Vec3 &ray, const Vec3 &normal);
 };
 
