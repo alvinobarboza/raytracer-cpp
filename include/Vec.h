@@ -13,7 +13,7 @@ public:
     [[nodiscard]] float dot(const Vec3 &other) const;
     [[nodiscard]] float length_squared() const;
     [[nodiscard]] float length() const;
-    [[nodiscard]] Vec3 normal() const;
+    [[nodiscard]] Vec3 normalize() const;
     [[nodiscard]] Vec3 cross(const Vec3 &other) const;
 
     Vec3 operator*(float scalar) const;

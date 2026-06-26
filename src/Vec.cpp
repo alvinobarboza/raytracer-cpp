@@ -1,7 +1,7 @@
 #include "Vec.h"
 #include <cmath>
 
-#include "Constants.h"
+#include "Maths.h"
 
 float Vec3::dot(const Vec3 &other) const
 {
@@ -18,7 +18,7 @@ float Vec3::length() const
     return std::sqrt(this->length_squared());
 }
 
-Vec3 Vec3::normal() const
+Vec3 Vec3::normalize() const
 {
     const float normal = this->length();
     if (normal == 0) return {0,0,0};

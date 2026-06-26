@@ -1,5 +1,6 @@
 #include "RayTracer.h"
 #include "cmath"
+#include "Maths.h"
 
 void RayTracer::add_light(const Light &light) {
     this->lights.push_back(light);
@@ -86,12 +87,26 @@ float RayTracer::compute_light(const Vec3 &point, const Vec3 &normal, const Vec3
 Color RayTracer::trace_ray(const Vec3 &origin, const Vec3 &ray, const float min_distance) const {
     auto [closes_sphere, closest_inter] = this->closest_intersection(origin, ray, min_distance);
 
-    if (closes_sphere.radius == 0) return DARKBLUE;
+    if (closes_sphere.radius == 0) {
+        const Vec3 up = Vec3::UP();
+        const Vec3 rayNormalized = ray.normalize();
+
+        const float angle = up.dot(rayNormalized);
+
+        constexpr auto gray = GRAY;
+        constexpr auto darkblue = Color(0, 40, 80, 255);
+
+        const auto r = static_cast<unsigned char>(Math::lerp_to(gray.r, darkblue.r, angle));
+        const auto g = static_cast<unsigned char>(Math::lerp_to(gray.g, darkblue.g, angle));
+        const auto b = static_cast<unsigned char>(Math::lerp_to(gray.b, darkblue.b, angle));
+
+        return {r, g, b, 255};
+    }
 
     const Vec3 point = origin + ray * closest_inter;
     Vec3 normal = point - closes_sphere.center;
 
-    normal = normal.normal();
+    normal = normal.normalize();
     const Vec3 objToCam = ray * -1;
 
     Color finalColor = closes_sphere.color;

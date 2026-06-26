@@ -2,7 +2,7 @@
 
 #include <cmath>
 
-#include "Constants.h"
+#include "Maths.h"
 #include "raylib.h"
 
 void RayCamera::update_camera_transform() {
@@ -31,7 +31,7 @@ void RayCamera::update_camera_transform() {
 void RayCamera::move_forward(const float speed)
 {
     const Vec3 dir = this->direction.rotate_xyz(this->rotation);
-    const Vec3 normal = dir.normal();
+    const Vec3 normal = dir.normalize();
     this->position += normal * speed;
 }
 
@@ -45,7 +45,7 @@ void RayCamera::move_left(const float speed)
     const Vec3 dir = this->direction.rotate_xyz(this->rotation);
     const Vec3 sideDir = dir.cross(Vec3::UP());
 
-    const Vec3 normalSideDir = sideDir.normal();
+    const Vec3 normalSideDir = sideDir.normalize();
     this->position += normalSideDir * speed;
 }
 

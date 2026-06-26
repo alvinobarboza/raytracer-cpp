@@ -28,7 +28,7 @@ add_executable(${PROJECT_NAME} src/main.cpp
         include/Vec.h
         src/Vec.cpp
         include/Matrix.h
-        include/Constants.h
+        include/Maths.h
         include/Lights.h
         src/Camera.cpp
         include/Camera.h
