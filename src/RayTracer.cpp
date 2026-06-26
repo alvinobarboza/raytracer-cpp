@@ -100,7 +100,7 @@ Color RayTracer::sky_color(const Vec3 &ray) {
     return {r, g, b, 255};
 }
 
-Color RayTracer::trace_ray(const Vec3 &origin, const Vec3 &ray, const float min_distance) const {
+Color RayTracer::trace_ray(const Vec3 &origin, const Vec3 &ray, const float min_distance, const int bounce) const {
     auto [closes_sphere, closest_inter] = this->closest_intersection(origin, ray, min_distance);
 
     if (closes_sphere.radius == 0) {
@@ -121,6 +121,19 @@ Color RayTracer::trace_ray(const Vec3 &origin, const Vec3 &ray, const float min_
     finalColor.g = static_cast<unsigned char>(static_cast<float>(finalColor.g) * i);
     finalColor.b = static_cast<unsigned char>(static_cast<float>(finalColor.b) * i);
 
+    if (bounce <= 0 || closes_sphere.reflectivity <= 0) {
+        return finalColor;
+    }
+
+    const Vec3 reflected = reflect_ray(objToCam, normal);
+    const Color reflectedColor = this->trace_ray(point, reflected, 0.001f, bounce-1);
+
+    const float r = closes_sphere.reflectivity;
+
+    finalColor.r = static_cast<unsigned char>(static_cast<float>(finalColor.r)*(1-r) + static_cast<float>(reflectedColor.r)*r);
+    finalColor.g = static_cast<unsigned char>(static_cast<float>(finalColor.g)*(1-r) + static_cast<float>(reflectedColor.g)*r);
+    finalColor.b = static_cast<unsigned char>(static_cast<float>(finalColor.b)*(1-r) + static_cast<float>(reflectedColor.b)*r);
+
     return finalColor;
 }
 
@@ -137,7 +150,9 @@ void RayTracer::compute_rays() {
 
             const auto color = this->trace_ray(
                 this->camera.position,
-                rayCorrectedDirection, this->canvas.view.d);
+                rayCorrectedDirection,
+                this->canvas.view.d,
+                this->max_bounce);
 
             this->canvas.put_pixel(x,y,color);
         }

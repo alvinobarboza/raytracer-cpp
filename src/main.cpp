@@ -21,7 +21,7 @@
 int main() {
     constexpr int screenWidth = 800;
     constexpr int screenHeight = 450;
-    constexpr int max_bounces = 5;
+    constexpr int max_bounces = 3;
     constexpr float max_distance = 1000000000.0f;
 
     InitWindow(screenWidth, screenHeight, "Camera movement");
