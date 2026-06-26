@@ -39,6 +39,15 @@ Vec3 Vec3::cross(const Vec3 &other) const
     };
 }
 
+Vec3 Vec3::lerp_to(const Vec3 &other, const float ratio) const
+{
+    return {
+        Math::lerp_to(this->x,other.x,ratio),
+        Math::lerp_to(this->y,other.y,ratio),
+        Math::lerp_to(this->z,other.z,ratio),
+    };
+}
+
 Vec3 Vec3::operator*(const float scalar) const
 {
     return {

@@ -19,7 +19,7 @@
 
 
 int main() {
-    constexpr int screenWidth = 800;
+    constexpr int screenWidth = 450;
     constexpr int screenHeight = 450;
     constexpr int max_bounces = 3;
     constexpr float max_distance = 1000000000.0f;
@@ -42,19 +42,19 @@ int main() {
 
     auto ray_tracer = RayTracer(ray_camera, view_canvas, max_bounces, max_distance);
     ray_tracer.add_sphere(Sphere(
-        Vec3(0,-1,3),RED,1,500,0.2,0,0
+        Vec3(0,-1,3),RED,1,500,0.2,1.5f,0
         ));
     ray_tracer.add_sphere(Sphere(
-        Vec3(2,0,4),BLUE,1,500,0.001,0,0
+        Vec3(2,0,4),BLUE,1,500,0.001,1.5f,0
         ));
     ray_tracer.add_sphere(Sphere(
-        Vec3(-2,0,4),GREEN,1,10,0.1,0,0
+        Vec3(-2,0,4),GREEN,1,10,0.1,1.5f,0
         ));
     ray_tracer.add_sphere(Sphere(
-        Vec3(-0.5,0,2),BLUE,0.4f,200,0.2,1.33,0.9
+        Vec3(-0.5,0,2),BLUE,0.4f,200,0,1.5f,0.8f
         ));
     ray_tracer.add_sphere(Sphere(
-        Vec3(0,-501,0),DARKGREEN,500,200,0.1,0,0
+        Vec3(0,-501,0),DARKGREEN,500,200,0.1,1.5f,0
     ));
 
     ray_tracer.add_light(Light(LightType::AMBIENT_LIGHT,0.2,Vec3::ZERO(),Vec3::ZERO()));

@@ -84,23 +84,32 @@ float RayTracer::compute_light(const Vec3 &point, const Vec3 &normal, const Vec3
     return intensity;
 }
 
-Color RayTracer::sky_color(const Vec3 &ray) {
+Vec3 RayTracer::sky_color(const Vec3 &ray) {
     const Vec3 up = Vec3::UP();
     const Vec3 rayNormalized = ray.normalize();
 
     const float angle = up.dot(rayNormalized);
 
-    constexpr auto gray = GRAY;
-    constexpr auto darkblue = Color(0, 40, 80, 255);
+    const auto gray = Utils::color_to_vec3(GRAY);
+    const auto blue = Utils::color_to_vec3(DARKBLUE);
+    const auto darkblue = Vec3(0, 40.0f / 255.0f, 80 / 255.0f);
 
-    const auto r = static_cast<unsigned char>(Math::lerp_to(gray.r, darkblue.r, angle));
-    const auto g = static_cast<unsigned char>(Math::lerp_to(gray.g, darkblue.g, angle));
-    const auto b = static_cast<unsigned char>(Math::lerp_to(gray.b, darkblue.b, angle));
+    if (angle < 0.5f) {
+        return gray.lerp_to(blue, angle * 2);
+    }
 
-    return {r, g, b, 255};
+    return blue.lerp_to(darkblue, (angle * 2.0f) - 1.0f);
 }
 
-Color RayTracer::trace_ray(const Vec3 &origin, const Vec3 &ray, const float min_distance, const int bounce) const {
+float RayTracer::ray_angle_from_normal(const Vec3 &ray, const Vec3 &normal) {
+    const float dot = ray.dot(normal);
+    const float rayLength = ray.length();
+    const float normalLength = normal.length();
+
+    return std::acos(dot / (rayLength * normalLength));
+}
+
+Vec3 RayTracer::trace_ray(const Vec3 &origin, const Vec3 &ray, const float min_distance, const int bounce) const {
     auto [closes_sphere, closest_inter] = this->closest_intersection(origin, ray, min_distance);
 
     if (closes_sphere.radius == 0) {
@@ -113,26 +122,49 @@ Color RayTracer::trace_ray(const Vec3 &origin, const Vec3 &ray, const float min_
     normal = normal.normalize();
     const Vec3 objToCam = ray * -1;
 
-    Color finalColor = closes_sphere.color;
+    Vec3 finalColor = closes_sphere.color;
 
-    const float i = this->compute_light(point, normal, objToCam, closes_sphere.specularity);
+    const float intensity = this->compute_light(point, normal, objToCam, closes_sphere.specularity);
 
-    finalColor.r = static_cast<unsigned char>(static_cast<float>(finalColor.r) * i);
-    finalColor.g = static_cast<unsigned char>(static_cast<float>(finalColor.g) * i);
-    finalColor.b = static_cast<unsigned char>(static_cast<float>(finalColor.b) * i);
+    finalColor = finalColor * intensity;
+
+    if (closes_sphere.opacity > 0.0f) {
+        // Refraction test: Every vector must be normalized
+        // i = ray
+        // t = fracted ray
+        // n = surface normal
+        // n1 = refractive index of the first medium
+        // n2 = refractive index of the second medium
+        // u = ratio of rafraction indices, u = n1 / n2
+        // . = dot product
+        // Formula:
+        // t1 = sqrt(1 - u^2 * (1 - (n . i)^2)) * n + u * (i - (n . i) * n)
+
+        const Vec3 i = ray;
+        const Vec3 n = normal;
+        const float n1 = 1.0f;
+        const float n2 = closes_sphere.refractionIndex;
+        const float u = n1/n2;
+
+        const auto n_dot_i = n.dot(i);
+        const auto sqrt_part = std::sqrt(1-(u*u)*(1-(n_dot_i)*(n_dot_i)));
+        const auto sum_part = n + (i - n * (n_dot_i) ) * u;
+        auto t = sum_part * sqrt_part;
+
+        const Vec3 transparent = this->trace_ray(point, t, min_distance, bounce-1);
+        finalColor = finalColor.lerp_to(transparent, closes_sphere.opacity);
+        // Test
+    }
 
     if (bounce <= 0 || closes_sphere.reflectivity <= 0) {
         return finalColor;
     }
 
     const Vec3 reflected = reflect_ray(objToCam, normal);
-    const Color reflectedColor = this->trace_ray(point, reflected, 0.001f, bounce-1);
+    const Vec3 reflectedColor = this->trace_ray(point, reflected, 0.001f, bounce-1);
 
     const float r = closes_sphere.reflectivity;
-
-    finalColor.r = static_cast<unsigned char>(static_cast<float>(finalColor.r)*(1-r) + static_cast<float>(reflectedColor.r)*r);
-    finalColor.g = static_cast<unsigned char>(static_cast<float>(finalColor.g)*(1-r) + static_cast<float>(reflectedColor.g)*r);
-    finalColor.b = static_cast<unsigned char>(static_cast<float>(finalColor.b)*(1-r) + static_cast<float>(reflectedColor.b)*r);
+    finalColor = finalColor.lerp_to(reflectedColor, r);
 
     return finalColor;
 }
@@ -154,7 +186,7 @@ void RayTracer::compute_rays() {
                 this->canvas.view.d,
                 this->max_bounce);
 
-            this->canvas.put_pixel(x,y,color);
+            this->canvas.put_pixel(x,y,Utils::vec3_to_color(color));
         }
     }
 }
