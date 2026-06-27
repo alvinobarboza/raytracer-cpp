@@ -109,7 +109,36 @@ float RayTracer::ray_angle_from_normal(const Vec3 &ray, const Vec3 &normal) {
     return std::acos(dot / (rayLength * normalLength));
 }
 
-Vec3 RayTracer::trace_ray(const Vec3 &origin, const Vec3 &ray, const float min_distance, const int bounce) const {
+// Refraction: source https://devforum.roblox.com/t/what-is-the-formula-for-refraction/2171867/17
+// i = ray
+// t = refracted ray
+// n = surface normal
+// n1 = refractive index of the first medium
+// n2 = refractive index of the second medium
+// u = ratio of refraction indices, u = n1 / n2
+// d = (-n) . i
+// . = dot product
+// Formula:
+// t = i * u + n * (u * d - sqrt(1-u²*(1-d²)))
+Vec3 RayTracer::refract_ray(const Vec3 &ray, const Vec3 &normal, const float rIndex) {
+    const Vec3 i = ray;
+    const Vec3 n = normal;
+    constexpr float n1 = 1.0f;
+    const float n2 = rIndex;
+    const float u = n1/n2;
+    const auto d = (n*-1).dot(i);
+
+    const auto delta = std::sqrt(1-(u*u)*(1-(d*d)));
+
+    const auto sqrtSum = n * (u*d - delta);
+    const auto t = i*u + sqrtSum;
+    return t;
+}
+
+// TODO: create ray class to cache length and normalized vector
+Vec3 RayTracer::trace_ray(const Vec3 &origin, const Vec3 &_ray, const float min_distance, const int bounce) const {
+    const Vec3 ray = _ray.normalize();
+
     auto [closes_sphere, closest_inter] = this->closest_intersection(origin, ray, min_distance);
 
     if (closes_sphere.radius == 0) {
@@ -133,34 +162,12 @@ Vec3 RayTracer::trace_ray(const Vec3 &origin, const Vec3 &ray, const float min_d
     }
 
     if (closes_sphere.opacity > 0.0f) {
-        // Refraction test: Every vector must be normalized
-        // i = ray
-        // t = fracted ray
-        // n = surface normal
-        // n1 = refractive index of the first medium
-        // n2 = refractive index of the second medium
-        // u = ratio of rafraction indices, u = n1 / n2
-        // . = dot product
-        // Formula:
-        // t1 = sqrt(1 - u^2 * (1 - (n . i)^2)) * n + u * (i - (n . i) * n)
-
-        const Vec3 i = ray;
-        const Vec3 n = normal;
-        const float n1 = 1.0f;
-        const float n2 = closes_sphere.refractionIndex;
-        const float u = n1/n2;
-
-        const auto n_dot_i = n.dot(i);
-        const auto sqrt_part = std::sqrt(1-(u*u)*(1-(n_dot_i)*(n_dot_i)));
-        const auto sum_part = n + (i - n * (n_dot_i) ) * u;
-        auto t = sum_part * sqrt_part;
-
-        const Vec3 transparent = this->trace_ray(point, t, min_distance, bounce-1);
+        const auto refraction = refract_ray(ray, normal, closes_sphere.refractionIndex);
+        const Vec3 transparent = this->trace_ray(point, refraction, min_distance, bounce-1);
         finalColor = finalColor.lerp_to(transparent, closes_sphere.opacity);
-        // Test
     }
 
-    if (bounce <= 0 || closes_sphere.reflectivity <= 0) {
+    if (closes_sphere.reflectivity <= 0) {
         return finalColor;
     }
 
@@ -174,6 +181,21 @@ Vec3 RayTracer::trace_ray(const Vec3 &origin, const Vec3 &ray, const float min_d
 }
 
 void RayTracer::compute_rays() {
+    // Just testing
+    if (IsKeyDown(KEY_UP)) {
+        this->spheres.at(this->spheres.size()-2).center.z += 1 * GetFrameTime();
+    }
+    if (IsKeyDown(KEY_DOWN)) {
+        this->spheres.at(this->spheres.size()-2).center.z -= 1 * GetFrameTime();
+    }
+    if (IsKeyDown(KEY_LEFT)) {
+        this->spheres.at(this->spheres.size()-2).center.x -= 1 * GetFrameTime();
+    }
+    if (IsKeyDown(KEY_RIGHT)) {
+        this->spheres.at(this->spheres.size()-2).center.x += 1 * GetFrameTime();
+    }
+    // Just testing
+
     const int startX = -this->canvas.width / 2;
     const int startY = -this->canvas.height / 2;
     const int endX = this->canvas.width / 2;
