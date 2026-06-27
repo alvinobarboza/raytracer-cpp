@@ -15,5 +15,5 @@ as part of my learning process with C++.
 
 ## Single threaded implementation
 
-[frame](/single_threaded.png?raw=true 'frame')
+![frame](/single_threaded.png?raw=true 'frame')
 
