@@ -19,8 +19,8 @@
 
 
 int main() {
-    constexpr int screenWidth = 450;
-    constexpr int screenHeight = 450;
+    constexpr int screenWidth = 900;
+    constexpr int screenHeight = 900;
     constexpr int max_bounces = 3;
     constexpr float max_distance = 1000000000.0f;
 
