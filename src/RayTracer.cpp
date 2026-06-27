@@ -128,6 +128,10 @@ Vec3 RayTracer::trace_ray(const Vec3 &origin, const Vec3 &ray, const float min_d
 
     finalColor = finalColor * intensity;
 
+    if (bounce <= 0) {
+        return finalColor;
+    }
+
     if (closes_sphere.opacity > 0.0f) {
         // Refraction test: Every vector must be normalized
         // i = ray
