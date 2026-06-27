@@ -51,7 +51,7 @@ int main() {
         Vec3(-2,0,4),GREEN,1,10,0.1,1.5f,0
         ));
     ray_tracer.add_sphere(Sphere(
-        Vec3(-0.5,0,2),BLUE,0.4f,200,0,1.5f,0.8f
+        Vec3(-0.5,0,2),BLUE,0.4f,200,0.2,1.5f,0.9f
         ));
     ray_tracer.add_sphere(Sphere(
         Vec3(0,-501,0),DARKGREEN,500,200,0.1,1.5f,0
