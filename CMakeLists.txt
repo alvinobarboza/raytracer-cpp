@@ -4,6 +4,7 @@ project(raytracer-cpp)
 include(FetchContent)
 
 set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 function(include_dependency libName gitUrl gitTag)
     FetchContent_Declare(
@@ -39,6 +40,8 @@ add_executable(${PROJECT_NAME} src/main.cpp
         src/Maths.cpp
         include/Utils.h
         src/Utils.cpp
+        src/ThreadPool.cpp
+        include/ThreadPool.h
 )
 
 target_include_directories(${PROJECT_NAME} PRIVATE include)

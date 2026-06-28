@@ -201,18 +201,35 @@ void RayTracer::compute_rays() {
     const int endX = this->canvas.width / 2;
     const int endY = this->canvas.height / 2;
 
-    for (int x = startX; x < endX; x++) {
-        for (int y = startY; y < endY; y++) {
-            auto rayDirection = this->canvas.canvas_to_viewport(x, y);
-            auto rayCorrectedDirection = rayDirection * this->camera.rotationMatrix;
+    const auto render = [this](const int sX, const int sY, const int eX, const int eY) {
+        for (int x = sX; x < eX; x++) {
+            for (int y = sY; y < eY; y++) {
+                auto rayDirection = this->canvas.canvas_to_viewport(x, y);
+                auto rayCorrectedDirection = rayDirection * this->camera.rotationMatrix;
 
-            const auto color = this->trace_ray(
-                this->camera.position,
-                rayCorrectedDirection,
-                this->canvas.view.d,
-                this->max_bounce);
+                const auto color = this->trace_ray(
+                    this->camera.position,
+                    rayCorrectedDirection,
+                    this->canvas.view.d,
+                    this->max_bounce);
 
-            this->canvas.put_pixel(x,y,Utils::vec3_to_color(color));
+                this->canvas.put_pixel(x,y,Utils::vec3_to_color(color));
+            }
         }
-    }
+    };
+
+    pool.enqueue([render, startX, startY] {
+        render(startX, startY, 0, 0);
+    });
+    pool.enqueue([render, startY, endX] {
+        render(0, startY, endX, 0);
+    });
+    pool.enqueue([render, startX, endY] {
+        render(startX, 0, 0, endY);
+    });
+    pool.enqueue([render, endX, endY] {
+        render(0, 0, endX, endY);
+    });
+
+    pool.wait();
 }
