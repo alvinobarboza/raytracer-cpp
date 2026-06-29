@@ -2,23 +2,23 @@
 
 void Canvas::put_pixel(const int x, const int y, const Color color)
 {
-    const int cX = this->width / 2 + x;
-    const int cY = this->height / 2 - y;
+    const int cX = width / 2 + x;
+    const int cY = height / 2 - y;
 
-    const int i = cY * this->width + cX;
+    const int i = cY * width + cX;
 
-    if (i < 0 || i >= this->pixels.size()) {
+    if (i < 0 || i >= pixels.size()) {
         return;
     }
 
-    this->pixels[i] = color;
+    pixels[i] = color;
 }
 
 Vec3 Canvas::canvas_to_viewport(const int x, const int y) const
 {
     return {
-        (static_cast<float>(x) * this->view.x) / static_cast<float>(this->width),
-        (static_cast<float>(y) * this->view.y) / static_cast<float>(this->height),
-        this->view.d
+        (static_cast<float>(x) * view.x) / static_cast<float>(width),
+        (static_cast<float>(y) * view.y) / static_cast<float>(height),
+        view.d
     };
 }

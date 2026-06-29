@@ -3,29 +3,29 @@
 #include "Maths.h"
 
 void RayTracer::add_light(const Light &light) {
-    this->lights.push_back(light);
+    lights.push_back(light);
 }
 
 void RayTracer::add_sphere(const Sphere &sphere)
 {
-    this->spheres.push_back(sphere);
+    spheres.push_back(sphere);
 }
 
 std::pair<Sphere, float> RayTracer::closest_intersection(
     const Vec3 &origin, const Vec3 &ray, const float min_distance) const
 {
-    float closest_intersection = this->max_bounce_distance;
+    float closest_intersection = max_bounce_distance;
     Sphere sphere;
 
-    for (auto &s : this->spheres) {
-        auto [t1, t2] = s.intersect(origin, ray, this->max_bounce_distance);
+    for (auto &s : spheres) {
+        auto [t1, t2] = s.intersect(origin, ray, max_bounce_distance);
 
-        if (t1 < closest_intersection && min_distance < t1 && t1 < this->max_bounce_distance) {
+        if (t1 < closest_intersection && min_distance < t1 && t1 < max_bounce_distance) {
             closest_intersection = t1;
             sphere = s;
         }
 
-        if (t2 < closest_intersection && min_distance < t2 && t2 < this->max_bounce_distance) {
+        if (t2 < closest_intersection && min_distance < t2 && t2 < max_bounce_distance) {
             closest_intersection = t2;
             sphere = s;
         }
@@ -42,7 +42,7 @@ Vec3 RayTracer::reflect_ray(const Vec3 &ray, const Vec3 &normal) {
 float RayTracer::compute_light(const Vec3 &point, const Vec3 &normal, const Vec3 &objToCam, const int specular) const {
     float intensity = 0.0f;
 
-    for (auto &light : this->lights) {
+    for (auto &light : lights) {
         if (light.type == LightType::AMBIENT_LIGHT) {
             intensity = light.intensity;
         } else {
@@ -52,7 +52,7 @@ float RayTracer::compute_light(const Vec3 &point, const Vec3 &normal, const Vec3
             }
 
             // Shadows
-            if (auto [sphere, _] = this->closest_intersection(point, lightDirection, 0.001f); sphere.radius > 0) {
+            if (auto [sphere, _] = closest_intersection(point, lightDirection, 0.001f); sphere.radius > 0) {
                 continue;
             }
 
@@ -139,7 +139,7 @@ Vec3 RayTracer::refract_ray(const Vec3 &ray, const Vec3 &normal, const float rIn
 Vec3 RayTracer::trace_ray(const Vec3 &origin, const Vec3 &_ray, const float min_distance, const int bounce) const {
     const Vec3 ray = _ray.normalize();
 
-    auto [closes_sphere, closest_inter] = this->closest_intersection(origin, ray, min_distance);
+    auto [closes_sphere, closest_inter] = closest_intersection(origin, ray, min_distance);
 
     if (closes_sphere.radius == 0) {
         return sky_color(ray);
@@ -153,7 +153,7 @@ Vec3 RayTracer::trace_ray(const Vec3 &origin, const Vec3 &_ray, const float min_
 
     Vec3 finalColor = closes_sphere.color;
 
-    const float intensity = this->compute_light(point, normal, objToCam, closes_sphere.specularity);
+    const float intensity = compute_light(point, normal, objToCam, closes_sphere.specularity);
 
     finalColor = finalColor * intensity;
 
@@ -163,7 +163,7 @@ Vec3 RayTracer::trace_ray(const Vec3 &origin, const Vec3 &_ray, const float min_
 
     if (closes_sphere.opacity > 0.0f) {
         const auto refraction = refract_ray(ray, normal, closes_sphere.refractionIndex);
-        const Vec3 transparent = this->trace_ray(point, refraction, min_distance, bounce-1);
+        const Vec3 transparent = trace_ray(point, refraction, min_distance, bounce-1);
         finalColor = finalColor.lerp_to(transparent, closes_sphere.opacity);
     }
 
@@ -172,7 +172,7 @@ Vec3 RayTracer::trace_ray(const Vec3 &origin, const Vec3 &_ray, const float min_
     }
 
     const Vec3 reflected = reflect_ray(objToCam, normal);
-    const Vec3 reflectedColor = this->trace_ray(point, reflected, 0.001f, bounce-1);
+    const Vec3 reflectedColor = trace_ray(point, reflected, 0.001f, bounce-1);
 
     const float r = closes_sphere.reflectivity;
     finalColor = finalColor.lerp_to(reflectedColor, r);
@@ -183,23 +183,23 @@ Vec3 RayTracer::trace_ray(const Vec3 &origin, const Vec3 &_ray, const float min_
 void RayTracer::compute_rays() {
     // Just testing
     if (IsKeyDown(KEY_UP)) {
-        this->spheres.at(this->spheres.size()-2).center.z += 1 * GetFrameTime();
+        spheres.at(spheres.size()-2).center.z += 1 * GetFrameTime();
     }
     if (IsKeyDown(KEY_DOWN)) {
-        this->spheres.at(this->spheres.size()-2).center.z -= 1 * GetFrameTime();
+        spheres.at(spheres.size()-2).center.z -= 1 * GetFrameTime();
     }
     if (IsKeyDown(KEY_LEFT)) {
-        this->spheres.at(this->spheres.size()-2).center.x -= 1 * GetFrameTime();
+        spheres.at(spheres.size()-2).center.x -= 1 * GetFrameTime();
     }
     if (IsKeyDown(KEY_RIGHT)) {
-        this->spheres.at(this->spheres.size()-2).center.x += 1 * GetFrameTime();
+        spheres.at(spheres.size()-2).center.x += 1 * GetFrameTime();
     }
     // Just testing
 
-    const int startX = -this->canvas.width / 2;
-    const int startY = -this->canvas.height / 2;
-    const int endX = this->canvas.width / 2;
-    const int endY = this->canvas.height / 2;
+    const int startX = -canvas.width / 2;
+    const int startY = -canvas.height / 2;
+    const int endX = canvas.width / 2;
+    const int endY = canvas.height / 2;
 
     constexpr int tileSize = 100;
     for (int tileY = startY; tileY < endY; tileY += tileSize) {
@@ -210,16 +210,16 @@ void RayTracer::compute_rays() {
                         const int posX = tileX + x;
                         const int posY = tileY + y;
 
-                        const auto rayDirection = this->canvas.canvas_to_viewport(posX,  posY);
-                        const auto rayCorrectedDirection = rayDirection * this->camera.rotationMatrix;
+                        const auto rayDirection = canvas.canvas_to_viewport(posX,  posY);
+                        const auto rayCorrectedDirection = rayDirection * camera.rotationMatrix;
 
-                        const auto color = this->trace_ray(
-                            this->camera.position,
+                        const auto color = trace_ray(
+                            camera.position,
                             rayCorrectedDirection,
-                            this->canvas.view.d,
-                            this->max_bounce);
+                            canvas.view.d,
+                            max_bounce);
 
-                        this->canvas.put_pixel(posX, posY, Utils::vec3_to_color(color));
+                        canvas.put_pixel(posX, posY, Utils::vec3_to_color(color));
                     }
                 }
             });

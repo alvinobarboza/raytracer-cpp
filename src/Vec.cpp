@@ -5,114 +5,114 @@
 
 float Vec3::dot(const Vec3 &other) const
 {
-    return this->x * other.x + this->y * other.y + this->z * other.z;
+    return x * other.x + y * other.y + z * other.z;
 }
 
 float Vec3::length_squared() const
 {
-    return this->x * this->x + this->y * this->y + this->z * this->z;
+    return x * x + y * y + z * z;
 }
 
 float Vec3::length() const
 {
-    return std::sqrt(this->length_squared());
+    return std::sqrt(length_squared());
 }
 
 Vec3 Vec3::normalize() const
 {
-    const float normal = this->length();
+    const float normal = length();
     if (normal == 0) return {0,0,0};
 
     return {
-        this->x / normal,
-        this->y / normal,
-        this->z / normal
+        x / normal,
+        y / normal,
+        z / normal
     };
 }
 
 Vec3 Vec3::cross(const Vec3 &other) const
 {
     return {
-        this->y*other.z - this->z*other.y,
-        this->z*other.x - this->x*other.z,
-        this->x*other.y - this->y*other.x,
+        y*other.z - z*other.y,
+        z*other.x - x*other.z,
+        x*other.y - y*other.x,
     };
 }
 
 Vec3 Vec3::lerp_to(const Vec3 &other, const float ratio) const
 {
     return {
-        Math::lerp_to(this->x,other.x,ratio),
-        Math::lerp_to(this->y,other.y,ratio),
-        Math::lerp_to(this->z,other.z,ratio),
+        Math::lerp_to(x,other.x,ratio),
+        Math::lerp_to(y,other.y,ratio),
+        Math::lerp_to(z,other.z,ratio),
     };
 }
 
 Vec3 Vec3::operator*(const float scalar) const
 {
     return {
-        this->x * scalar,
-        this->y * scalar,
-        this->z * scalar
+        x * scalar,
+        y * scalar,
+        z * scalar
     };
 }
 
 Vec3 Vec3::operator*(const Vec3 &scalar) const
 {
     return {
-        this->x * scalar.x,
-        this->y * scalar.y,
-        this->z * scalar.z
+        x * scalar.x,
+        y * scalar.y,
+        z * scalar.z
     };
 }
 
 Vec3 Vec3::operator+(const Vec3 &vector) const
 {
     return {
-        this->x + vector.x,
-        this->y + vector.y,
-        this->z + vector.z
+        x + vector.x,
+        y + vector.y,
+        z + vector.z
     };
 }
 
 Vec3 Vec3::operator-(const Vec3 &vector) const
 {
     return {
-        this->x - vector.x,
-        this->y - vector.y,
-        this->z - vector.z
+        x - vector.x,
+        y - vector.y,
+        z - vector.z
     };
 }
 
 void Vec3::operator+=(const Vec3 &vector)
 {
-    this->x += vector.x;
-    this->y += vector.y;
-    this->z += vector.z;
+    x += vector.x;
+    y += vector.y;
+    z += vector.z;
 }
 
 Vec3 Vec3::operator*(const Matrix3x3 &matrix) const
 {
     return {
-        this->x * matrix.data[0] + this->y * matrix.data[1] + this->z * matrix.data[2],
-        this->x * matrix.data[3] + this->y * matrix.data[4] + this->z * matrix.data[5],
-        this->x * matrix.data[6] + this->y * matrix.data[7] + this->z * matrix.data[8]
+        x * matrix.data[0] + y * matrix.data[1] + z * matrix.data[2],
+        x * matrix.data[3] + y * matrix.data[4] + z * matrix.data[5],
+        x * matrix.data[6] + y * matrix.data[7] + z * matrix.data[8]
     };
 }
 
 Vec3 Vec3::rotate_x(const float angle) const
 {
-    return this->rotate_xyz({angle, 0,0});
+    return rotate_xyz({angle, 0,0});
 }
 
 Vec3 Vec3::rotate_y(const float angle) const
 {
-    return this->rotate_xyz({0, angle,0});
+    return rotate_xyz({0, angle,0});
 }
 
 Vec3 Vec3::rotate_z(const float angle) const
 {
-    return this->rotate_xyz({0, 0,angle});
+    return rotate_xyz({0, 0,angle});
 }
 
 Vec3 Vec3::rotate_xyz(const Vec3 &angle) const

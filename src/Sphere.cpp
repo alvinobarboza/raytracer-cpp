@@ -5,9 +5,9 @@
 std::pair<float, float> Sphere::intersect(
     const Vec3 &rayOrigin, const Vec3 &rayDir, const float maxDist) const
 {
-    const float r = this->radius;
+    const float r = radius;
 
-    const Vec3 co = rayOrigin - this->center;
+    const Vec3 co = rayOrigin - center;
 
     const float a = rayDir.dot(rayDir);
     const float b = 2 * co.dot(rayDir);
