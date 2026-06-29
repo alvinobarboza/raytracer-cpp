@@ -22,6 +22,8 @@ int main() {
     constexpr int screenWidth = 900;
     constexpr int screenHeight = 900;
     constexpr int max_bounces = 3;
+    constexpr int thread_pool_size = 10;
+    constexpr int tile_size = 100; // for render pool to work with
     constexpr float max_distance = 1000000000.0f;
 
     InitWindow(screenWidth, screenHeight, "Camera movement");
@@ -40,7 +42,14 @@ int main() {
         View{1, static_cast<float>(screenHeight) / static_cast<float>(screenWidth), 1}
     );
 
-    auto ray_tracer = RayTracer(ray_camera, view_canvas, max_bounces, max_distance);
+    auto ray_tracer = RayTracer(
+        ray_camera,
+        view_canvas,
+        max_bounces,
+        max_distance,
+        thread_pool_size,
+        tile_size);
+
     ray_tracer.add_sphere(Sphere(
         Vec3(0,-1,3),RED,1,500,0.2,1.5f,0
         ));

@@ -201,35 +201,30 @@ void RayTracer::compute_rays() {
     const int endX = this->canvas.width / 2;
     const int endY = this->canvas.height / 2;
 
-    const auto render = [this](const int sX, const int sY, const int eX, const int eY) {
-        for (int x = sX; x < eX; x++) {
-            for (int y = sY; y < eY; y++) {
-                auto rayDirection = this->canvas.canvas_to_viewport(x, y);
-                auto rayCorrectedDirection = rayDirection * this->camera.rotationMatrix;
+    constexpr int tileSize = 100;
+    for (int tileY = startY; tileY < endY; tileY += tileSize) {
+        for (int tileX = startX; tileX < endX; tileX += tileSize) {
+            pool.enqueue([this, tileX, tileY, endX, endY ] {
+                for (int y = 0; y < tileSize && tileY + y < endY; y++) {
+                    for (int x = 0; x < tileSize && tileX + x < endX; x++) {
+                        const int posX = tileX + x;
+                        const int posY = tileY + y;
 
-                const auto color = this->trace_ray(
-                    this->camera.position,
-                    rayCorrectedDirection,
-                    this->canvas.view.d,
-                    this->max_bounce);
+                        const auto rayDirection = this->canvas.canvas_to_viewport(posX,  posY);
+                        const auto rayCorrectedDirection = rayDirection * this->camera.rotationMatrix;
 
-                this->canvas.put_pixel(x,y,Utils::vec3_to_color(color));
-            }
+                        const auto color = this->trace_ray(
+                            this->camera.position,
+                            rayCorrectedDirection,
+                            this->canvas.view.d,
+                            this->max_bounce);
+
+                        this->canvas.put_pixel(posX, posY, Utils::vec3_to_color(color));
+                    }
+                }
+            });
         }
-    };
-
-    pool.enqueue([render, startX, startY] {
-        render(startX, startY, 0, 0);
-    });
-    pool.enqueue([render, startY, endX] {
-        render(0, startY, endX, 0);
-    });
-    pool.enqueue([render, startX, endY] {
-        render(startX, 0, 0, endY);
-    });
-    pool.enqueue([render, endX, endY] {
-        render(0, 0, endX, endY);
-    });
+    }
 
     pool.wait();
 }

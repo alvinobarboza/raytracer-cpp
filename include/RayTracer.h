@@ -11,6 +11,8 @@
 
 class RayTracer {
     int max_bounce;
+    int pool_size;
+    int tile_size;;
     float max_bounce_distance;
     std::vector<Light> lights;
     std::vector<Sphere> spheres;
@@ -19,8 +21,20 @@ public:
     RayCamera camera;
     Canvas canvas;
 
-    RayTracer(const RayCamera &camera, Canvas canvas,const int max_bounce, const float max_bounce_distance) : max_bounce(
-        max_bounce), max_bounce_distance(max_bounce_distance), pool(4), camera(camera), canvas(std::move(canvas)) {
+    RayTracer(
+        const RayCamera &camera,
+        Canvas canvas,
+        const int max_bounce,
+        const float max_bounce_distance,
+        const int pool_size,
+        const int tile_size) :
+    max_bounce(max_bounce),
+    max_bounce_distance(max_bounce_distance),
+    pool(pool_size),
+    pool_size(pool_size),
+    camera(camera),
+    canvas(std::move(canvas)),
+    tile_size(tile_size){
     };
 
     void add_light(const Light &light);
