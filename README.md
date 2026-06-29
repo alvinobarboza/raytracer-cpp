@@ -9,9 +9,13 @@ as part of my learning process with C++.
 * Colors are now Vec3, only convert them at the very end.
 * New refraction formular, with better visual results(thanks roblox forum**)
   * Still not considering medium, so the refraction doesn't take into account the inner part of the object. (Visually incorrect compared to real world)
-* Working on multithread...
+* Tile based, multithreaded rendering approach
 
 # Screenshots
+
+## Multithreaded implementation
+
+![frame](/multi_threaded.png?raw=true 'frame')
 
 ## Single threaded implementation
 
