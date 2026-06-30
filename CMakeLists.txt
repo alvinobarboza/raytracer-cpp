@@ -24,24 +24,24 @@ if (NOT ${LIB1}_FOUND)
 endif()
 
 add_executable(${PROJECT_NAME} src/main.cpp
-        src/Canvas.cpp
-        include/Canvas.h
-        include/Vec.h
-        src/Vec.cpp
-        include/Matrix.h
-        include/Maths.h
-        include/Lights.h
-        src/Camera.cpp
         include/Camera.h
-        include/Sphere.h
-        src/RayTracer.cpp
+        include/Canvas.h
+        include/Lights.h
+        include/Maths.h
+        include/Matrix.h
         include/RayTracer.h
-        src/Sphere.cpp
-        src/Maths.cpp
-        include/Utils.h
-        src/Utils.cpp
-        src/ThreadPool.cpp
+        include/Sphere.h
         include/ThreadPool.h
+        include/Utils.h
+        include/Vec.h
+        src/Camera.cpp
+        src/Canvas.cpp
+        src/Maths.cpp
+        src/RayTracer.cpp
+        src/Sphere.cpp
+        src/ThreadPool.cpp
+        src/Utils.cpp
+        src/Vec.cpp
 )
 
 target_include_directories(${PROJECT_NAME} PRIVATE include)
