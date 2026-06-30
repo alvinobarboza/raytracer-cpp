@@ -201,12 +201,11 @@ void RayTracer::compute_rays() {
     const int endX = canvas.width / 2;
     const int endY = canvas.height / 2;
 
-    constexpr int tileSize = 100;
-    for (int tileY = startY; tileY < endY; tileY += tileSize) {
-        for (int tileX = startX; tileX < endX; tileX += tileSize) {
+    for (int tileY = startY; tileY < endY; tileY += tile_size) {
+        for (int tileX = startX; tileX < endX; tileX += tile_size) {
             pool.enqueue([this, tileX, tileY, endX, endY ] {
-                for (int y = 0; y < tileSize && tileY + y < endY; y++) {
-                    for (int x = 0; x < tileSize && tileX + x < endX; x++) {
+                for (int y = 0; y < tile_size && tileY + y < endY; y++) {
+                    for (int x = 0; x < tile_size && tileX + x < endX; x++) {
                         const int posX = tileX + x;
                         const int posY = tileY + y;
 
