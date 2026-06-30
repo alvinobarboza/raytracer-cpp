@@ -12,7 +12,7 @@ void RayTracer::add_sphere(const Sphere &sphere)
 }
 
 std::pair<Sphere, float> RayTracer::closest_intersection(
-    const Vec3 &origin, const Vec3 &ray, const float min_distance) const
+    const Vec3 origin, const Vec3 ray, const float min_distance) const
 {
     float closest_intersection = max_bounce_distance;
     Sphere sphere;
@@ -34,12 +34,12 @@ std::pair<Sphere, float> RayTracer::closest_intersection(
     return {sphere, closest_intersection};
 }
 
-Vec3 RayTracer::reflect_ray(const Vec3 &ray, const Vec3 &normal) {
+Vec3 RayTracer::reflect_ray(const Vec3 ray, const Vec3 normal) {
     const float angle = ray.dot(normal);
     return normal * 2 * angle - ray;
 }
 
-float RayTracer::compute_light(const Vec3 &point, const Vec3 &normal, const Vec3 &objToCam, const int specular) const {
+float RayTracer::compute_light(const Vec3 point, const Vec3 normal, const Vec3 objToCam, const int specular) const {
     float intensity = 0.0f;
 
     for (auto &light : lights) {
@@ -84,7 +84,7 @@ float RayTracer::compute_light(const Vec3 &point, const Vec3 &normal, const Vec3
     return intensity;
 }
 
-Vec3 RayTracer::sky_color(const Vec3 &ray) {
+Vec3 RayTracer::sky_color(const Vec3 ray) {
     const Vec3 up = Vec3::UP();
     const Vec3 rayNormalized = ray.normalize();
 
@@ -101,7 +101,7 @@ Vec3 RayTracer::sky_color(const Vec3 &ray) {
     return blue.lerp_to(darkblue, (angle * 2.0f) - 1.0f);
 }
 
-float RayTracer::ray_angle_from_normal(const Vec3 &ray, const Vec3 &normal) {
+float RayTracer::ray_angle_from_normal(const Vec3 ray, const Vec3 normal) {
     const float dot = ray.dot(normal);
     const float rayLength = ray.length();
     const float normalLength = normal.length();
@@ -120,7 +120,7 @@ float RayTracer::ray_angle_from_normal(const Vec3 &ray, const Vec3 &normal) {
 // . = dot product
 // Formula:
 // t = i * u + n * (u * d - sqrt(1-u²*(1-d²)))
-Vec3 RayTracer::refract_ray(const Vec3 &ray, const Vec3 &normal, const float rIndex) {
+Vec3 RayTracer::refract_ray(const Vec3 ray, const Vec3 normal, const float rIndex) {
     const Vec3 i = ray;
     const Vec3 n = normal;
     constexpr float n1 = 1.0f;
@@ -136,7 +136,7 @@ Vec3 RayTracer::refract_ray(const Vec3 &ray, const Vec3 &normal, const float rIn
 }
 
 // TODO: create ray class to cache length and normalized vector
-Vec3 RayTracer::trace_ray(const Vec3 &origin, const Vec3 &_ray, const float min_distance, const int bounce) const {
+Vec3 RayTracer::trace_ray(const Vec3 origin, const Vec3 _ray, const float min_distance, const int bounce) const {
     const Vec3 ray = _ray.normalize();
 
     auto [closes_sphere, closest_inter] = closest_intersection(origin, ray, min_distance);
