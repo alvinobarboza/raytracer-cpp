@@ -100,41 +100,6 @@ Vec3 Vec3::operator*(const Matrix3x3 &matrix) const
     };
 }
 
-Vec3 Vec3::rotate_x(const float angle) const
-{
-    return rotate_xyz({angle, 0,0});
-}
-
-Vec3 Vec3::rotate_y(const float angle) const
-{
-    return rotate_xyz({0, angle,0});
-}
-
-Vec3 Vec3::rotate_z(const float angle) const
-{
-    return rotate_xyz({0, 0,angle});
-}
-
-Vec3 Vec3::rotate_xyz(const Vec3 &angle) const
-{
-    const float cosa = std::cos(angle.x * -Math::DEG_TO_RAD);
-    const float sina = std::sin(angle.x * -Math::DEG_TO_RAD);
-
-    const float cosb = std::cos(angle.y * -Math::DEG_TO_RAD);
-    const float sinb = std::sin(angle.y * -Math::DEG_TO_RAD);
-
-    const float cosga = std::cos(angle.z * -Math::DEG_TO_RAD);
-    const float singa = std::sin(angle.z * -Math::DEG_TO_RAD);
-
-    const Matrix3x3 matrix = {
-        cosb * cosga, sina*sinb*cosga - cosa*singa, cosa*sinb*cosga + sina*singa,
-        cosb * singa, sina*sinb*singa + cosa*cosga, cosa*sinb*singa - sina*cosga,
-        -sinb, sina * cosb, cosa * cosb
-    };
-
-    return *this * matrix;
-}
-
 std::ostream& operator<<(std::ostream &os, const Vec3 &vector)
 {
     os << "(x:" << vector.x << ", y:" << vector.y << ", z:" << vector.z << ")";

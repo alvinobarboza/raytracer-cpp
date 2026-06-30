@@ -6,18 +6,6 @@
 #include "RayTracer.h"
 #include "Vec.h"
 
-// void draw_raytracer_camera(const RayCamera &camera) {
-//     const Vector3 position = { camera.position.x, camera.position.y, -camera.position.z };
-//     const Vec3 endDir = camera.direction.rotate_xyz(camera.rotation);
-//     const Vector3 direction = { endDir.x, endDir.y, -endDir.z };
-//     const Vector3 endPos = {position.x+direction.x*2, position.y+direction.y*2, position.z+direction.z*2};
-//
-//     DrawLine3D(position, endPos, DARKGREEN);
-//     DrawSphere(position, 1.0f, RED);
-//     DrawSphereWires(position, 1.1f, 12, 12, MAROON);
-// }
-
-
 int main() {
     constexpr int screenWidth = 900;
     constexpr int screenHeight = 900;

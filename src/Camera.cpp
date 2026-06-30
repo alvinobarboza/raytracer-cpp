@@ -30,7 +30,7 @@ void RayCamera::update_camera_transform() {
 
 void RayCamera::move_forward(const float speed)
 {
-    const Vec3 dir = direction.rotate_xyz(rotation);
+    const Vec3 dir = direction * rotationMatrix;
     const Vec3 normal = dir.normalize();
     position += normal * speed;
 }
@@ -42,7 +42,7 @@ void RayCamera::move_backward(const float speed)
 
 void RayCamera::move_left(const float speed)
 {
-    const Vec3 dir = direction.rotate_xyz(rotation);
+    const Vec3 dir = direction * rotationMatrix;
     const Vec3 sideDir = dir.cross(Vec3::UP());
 
     const Vec3 normalSideDir = sideDir.normalize();
