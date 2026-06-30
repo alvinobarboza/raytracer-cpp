@@ -29,7 +29,7 @@ int main() {
     InitWindow(screenWidth, screenHeight, "Camera movement");
     SetTargetFPS(60);
 
-    const auto ray_camera = RayCamera(
+    auto ray_camera = RayCamera(
         Vec3::ZERO(),
         Vec3::FORWARD(),
         Vec3::ZERO(),

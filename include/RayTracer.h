@@ -18,11 +18,11 @@ class RayTracer {
     std::vector<Sphere> spheres;
     ThreadPool pool;
 public:
-    RayCamera camera;
+    RayCamera &camera;
     Canvas canvas;
 
     RayTracer(
-        const RayCamera &camera,
+        RayCamera &camera,
         Canvas canvas,
         const int max_bounce,
         const float max_bounce_distance,
