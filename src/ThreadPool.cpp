@@ -1,6 +1,6 @@
 #include "ThreadPool.h"
 
-ThreadPool::ThreadPool(const size_t threads): stop(false), active_workers(0) {
+ThreadPool::ThreadPool(const size_t threads): stop(false), pending_workers(0) {
     for (size_t i = 0; i < threads; i++) {
         workers.emplace_back([this] {
             for (;;) {
@@ -20,8 +20,8 @@ ThreadPool::ThreadPool(const size_t threads): stop(false), active_workers(0) {
                 task();
 
                 lock.lock();
-                active_workers--;
-                if (active_workers == 0) {
+                pending_workers--;
+                if (pending_workers == 0) {
                     cv_wait.notify_all();
                 }
             }
@@ -32,7 +32,7 @@ ThreadPool::ThreadPool(const size_t threads): stop(false), active_workers(0) {
 void ThreadPool::wait() {
     std::unique_lock lock(queueMutex);
     cv_wait.wait(lock, [this] {
-        return active_workers == 0;
+        return pending_workers == 0;
     });
 }
 

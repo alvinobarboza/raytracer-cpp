@@ -15,7 +15,7 @@ class ThreadPool {
     std::condition_variable cv;
     std::condition_variable cv_wait;
     bool stop;
-    size_t active_workers;
+    size_t pending_workers;
 public:
     explicit ThreadPool(size_t threads);
     ~ThreadPool();
@@ -27,7 +27,7 @@ public:
     void enqueue(F&& f) {
         std::unique_lock lock(queueMutex);
         tasks.emplace(std::forward<F>(f));
-        active_workers++;
+        pending_workers++;
         lock.unlock();
         cv.notify_one();
     }
